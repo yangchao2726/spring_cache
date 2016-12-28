@@ -1,18 +1,13 @@
 package org.yc.spring_cache.config;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -28,10 +23,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  */
 @Configuration //用于表示这个类是一个配置类，用于配置Spring的相关信息
 @ComponentScan(basePackages="org.yc.spring_cache")
-@PropertySources({@PropertySource("classpath:config.properties"), 
-	@PropertySource(value="classpath:param.properties", ignoreResourceNotFound=true)}) // 加载指定的配置文件，配置文件内容会加载入Environment中等待调用
 @EnableWebMvc
-@Import(value = { BasicDataSourceDBConfig.class }) // 引入指定的配置类，我们引入了Spring容器配置类和数据源事务配置类
+@EnableAspectJAutoProxy(proxyTargetClass=true) // 启用切面自动代理，用于AOP
+@Import(value = { TransactionManagementConfig.class,CachingConfig.class }) // 引入指定的配置类，我们引入了Spring容器配置类和数据源事务配置类
 public class MVCConfiguration extends WebMvcConfigurerAdapter{
 
 	@Bean
@@ -40,18 +34,6 @@ public class MVCConfiguration extends WebMvcConfigurerAdapter{
 		resolver.setPrefix("/views/");
 		resolver.setSuffix(".jsp");
 		return resolver;
-	}
-	
-	@Bean
-	public SimpleCacheManager getCacheManager() {
-		SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-		Set<ConcurrentMapCache> caches = new HashSet<ConcurrentMapCache>();
-		ConcurrentMapCache cacheContext1 = new ConcurrentMapCache("default");
-		caches.add(cacheContext1);
-		ConcurrentMapCache cacheContext2 = new ConcurrentMapCache("accountCache");
-		caches.add(cacheContext2);
-		simpleCacheManager.setCaches(caches);
-		return simpleCacheManager;
 	}
 	
     @Bean

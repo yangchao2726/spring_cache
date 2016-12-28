@@ -24,25 +24,22 @@ public class MUserServiceImpl implements MUserServiceI{
 	@Override
 	public int insert(MUser muser) throws Exception {
 		muserMapper.insert(muser);
-//		if(1==1) throw new Exception("检测事务正确性");
+		if(1==1) throw new Exception("检测事务正确性");
 		return 0;
 	}
 
 	@Override
 	public int update(MUser muser) {
-		
 		return muserMapper.updateByPrimaryKey(muser);
 	}
 
 	@Override
 	public int delete(Integer id) {
-	
 		return muserMapper.deleteByPrimaryKey(id);
 	}
 
 	@Override
 	public MUser selectByPrimaryKey(Integer id) {
-		
 		return muserMapper.selectByPrimaryKey(id);
 	}
 

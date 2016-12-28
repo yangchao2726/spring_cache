@@ -1,5 +1,6 @@
 package org.yc.spring_cache.config;
 
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.sql.SQLException;
 
@@ -13,8 +14,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -37,6 +39,19 @@ public class BasicDataSourceDBConfig {
 	private Environment env;
 
 	private Log log = LogFactory.getLog(BasicDataSourceDBConfig.class);
+	
+	/**
+	 * @Description:通配符方式加载多个绝对匹配的Resource
+	 * @return
+	 * return:ResourcePatternResolver
+	 * @exception:
+	 * @author: YC
+	 * @time:2016年12月28日 下午1:32:35
+	 */
+	@Bean
+	public ResourcePatternResolver getResourcePatternResolver() {
+		return new PathMatchingResourcePatternResolver();
+	}
 
 	@Bean
 	public DataSource dataSource() throws SQLException {
@@ -84,11 +99,23 @@ public class BasicDataSourceDBConfig {
 		return dataSourceTransactionManager;
 	}
 
+	/**
+	 * @Description:
+	 * @see http://www.cnblogs.com/doit8791/p/4690494.html and http://www.cnblogs.com/soltex/archive/2013/12/10/3466697.html
+	 * @return
+	 * @throws SQLException
+	 * @throws IOException
+	 * return:SqlSessionFactoryBean
+	 * @exception:
+	 * @author: YC
+	 * @time:2016年12月28日 下午2:10:09
+	 */
 	@Bean("sqlSessionFactoryBean")
-	public SqlSessionFactoryBean getSqlSessionFactoryBean() throws SQLException {
+	public SqlSessionFactoryBean getSqlSessionFactoryBean() throws SQLException, IOException {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(dataSource());
-		Resource[] resource = { new ClassPathResource("classpath:org/yc/spring_cache/mapping/MUserMapper.xml") };// classpath:rml/mapping/*.xml
+//		Resource[] resource = {new ClassPathResource("org/yc/spring_cache/mapping/MUserMapper.xml")};
+		Resource[] resource = getResourcePatternResolver().getResources("classpath*:org/yc/spring_cache/mapping/*.xml");
 		sqlSessionFactoryBean.setMapperLocations(resource);
 		return sqlSessionFactoryBean;
 	}

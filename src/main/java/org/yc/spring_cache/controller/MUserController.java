@@ -10,24 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.yc.spring_cache.model.MUser;
+import org.yc.spring_cache.model.TestBean;
 import org.yc.spring_cache.service.MUserServiceI;
+import org.yc.spring_cache.service.TestBeanService;
 
 @Controller
 @RequestMapping("/muser")
 public class MUserController {
 
+	@Autowired
 	private MUserServiceI muserService;
+	
+	@Autowired
+	private TestBeanService testBeanService;
 
 	private Log log = LogFactory.getLog(MUserController.class);
-
-	public MUserServiceI getMuserService() {
-		return muserService;
-	}
-
-	@Autowired
-	public void setMuserService(MUserServiceI muserService) {
-		this.muserService = muserService;
-	}
 
 	@RequestMapping(value = "/listUser")
 	public String listUser(HttpServletRequest request) {
@@ -42,6 +39,7 @@ public class MUserController {
 		// muser.setId(id);
 		try {
 			muserService.insert(muser);
+			testBeanService.insert(new TestBean(muser.getName()));
 		} catch (Exception e) {
 			log.error("ÐÂÔöÒì³£", e);
 			e.printStackTrace();

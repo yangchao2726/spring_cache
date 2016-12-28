@@ -117,15 +117,16 @@
 			<artifactId>aspectjweaver</artifactId>
 			<version>1.8.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.20</version>
+		</dependency>
 	</dependencies>
 
-	<!-- <repositories>
-		<repository>
-			<id>springsource-milestones</id>
-			<name>SpringSource Milestones Proxy</name>
-			<url>https://oss.sonatype.org/content/repositories/springsource-milestones</url>
-		</repository>
-	</repositories> -->
+	<!-- <repositories> <repository> <id>springsource-milestones</id> <name>SpringSource 
+		Milestones Proxy</name> <url>https://oss.sonatype.org/content/repositories/springsource-milestones</url> 
+		</repository> </repositories> -->
 
 	<build>
 		<finalName>spring_cache</finalName>

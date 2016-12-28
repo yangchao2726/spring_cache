@@ -1,9 +1,10 @@
+package org.yc.spring_cache;
 /**
  * @Description:TODO
  * @author:YC
  * @time:2016年12月28日 上午10:37:16
  */
-package spring_cache;
+
 
 /**
  * @Description:TODO

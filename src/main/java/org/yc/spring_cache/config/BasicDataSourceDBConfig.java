@@ -1,5 +1,6 @@
 package org.yc.spring_cache.config;
 
+import java.net.Inet4Address;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
@@ -40,9 +41,18 @@ public class BasicDataSourceDBConfig {
 	@Bean
 	public DataSource dataSource() throws SQLException {
 		DruidDataSource dataSource = new DruidDataSource();
+		String password = "";
+		try{
+			String ip = Inet4Address.getLocalHost().toString();
+			if(-1 != ip.indexOf("192.168.1.16")) password = env.getProperty("jdbc.password.company");
+			else password = env.getProperty("jdbc.password.home");
+		}catch(Exception e) {
+			log.error(" ˝æ›ø‚√‹¬Î”–ŒÛ", e);
+			throw new SQLException();
+		}
 		dataSource.setUrl(env.getProperty("jdbc.url"));
 		dataSource.setUsername(env.getProperty("jdbc.username"));
-		dataSource.setPassword(env.getProperty("jdbc.password"));
+		dataSource.setPassword(password);
 		dataSource.setInitialSize(0);
 		dataSource.setMaxActive(20);
 		dataSource.setMaxIdle(20);
@@ -78,7 +88,7 @@ public class BasicDataSourceDBConfig {
 	public SqlSessionFactoryBean getSqlSessionFactoryBean() throws SQLException {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(dataSource());
-		Resource[] resource = { new ClassPathResource("org/yc/spring_cache/mapping/MUserMapper.xml") };// classpath:rml/mapping/*.xml
+		Resource[] resource = { new ClassPathResource("classpath:org/yc/spring_cache/mapping/MUserMapper.xml") };// classpath:rml/mapping/*.xml
 		sqlSessionFactoryBean.setMapperLocations(resource);
 		return sqlSessionFactoryBean;
 	}

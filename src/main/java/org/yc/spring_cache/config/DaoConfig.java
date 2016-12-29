@@ -1,3 +1,8 @@
+/**
+ * @Description:启用注解事务管理，使用CGLib代理
+ * @author:YC
+ * @time:2016年12月29日 下午5:33:20
+ */
 package org.yc.spring_cache.config;
 
 import java.io.IOException;
@@ -6,6 +11,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -19,19 +25,20 @@ import com.alibaba.druid.support.logging.Log;
 import com.alibaba.druid.support.logging.LogFactory;
 
 /**
- * @author YC
- * @see http://hanqunfeng.iteye.com/blog/2114975 受益匪浅 打个广告
+ * @Description:启用注解事务管理，使用CGLib代理  
  * 关于getResourcePatternResolver()的调用  在加载成功后spring会做拦截，而不是再次调用该方法加载bean
+ * @author:YC
+ * @time:2016年12月29日 下午5:33:20
  */
 @Configuration
-@EnableTransactionManagement(proxyTargetClass=true)
-@Import(value = {DataSourceConfig.class})
-public class TransactionManagementConfig {
-
-	private Log log = LogFactory.getLog(TransactionManagementConfig.class);
+@EnableTransactionManagement(proxyTargetClass = true)
+@Import(value={DataSourceConfig.class})
+public class DaoConfig {
 	
 	@javax.annotation.Resource(name="dataSource")
 	private DataSource dataSource;
+
+	private Log log = LogFactory.getLog(AppConfig.class);
 	
 	/**
 	 * @return
@@ -57,19 +64,6 @@ public class TransactionManagementConfig {
 	}
 
 	/**
-	 * 事务管理器
-	 * 
-	 * @throws SQLException
-	 */
-	@Bean(name="transactionManager")
-	public DataSourceTransactionManager dataSourceTransactionManager() throws SQLException {
-		DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
-		dataSourceTransactionManager.setDataSource(dataSource);
-		log.info("加载DataSourceTransactionManager完成");
-		return dataSourceTransactionManager;
-	}
-
-	/**
 	 * @Description:
 	 * @see http://www.cnblogs.com/doit8791/p/4690494.html and http://www.cnblogs.com/soltex/archive/2013/12/10/3466697.html
 	 * @return
@@ -88,5 +82,26 @@ public class TransactionManagementConfig {
 		Resource[] resource = getResourcePatternResolver().getResources("classpath*:org/yc/spring_cache/mapping/*.xml");
 		sqlSessionFactoryBean.setMapperLocations(resource);
 		return sqlSessionFactoryBean;
+	}
+	
+    @Bean
+	public MapperScannerConfigurer getMapperScannerConfigurer() throws SQLException {
+		MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
+		mapperScannerConfigurer.setBasePackage("org.yc.spring_cache.dao");
+		mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactoryBean");
+		return mapperScannerConfigurer;
+	}
+    
+    /**
+	 * 事务管理器
+	 * 
+	 * @throws SQLException
+	 */
+	@Bean(name="transactionManager")
+	public DataSourceTransactionManager dataSourceTransactionManager() throws SQLException {
+		DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
+		dataSourceTransactionManager.setDataSource(dataSource);
+		log.info("加载DataSourceTransactionManager完成");
+		return dataSourceTransactionManager;
 	}
 }

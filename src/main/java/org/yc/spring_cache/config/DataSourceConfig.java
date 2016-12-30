@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +14,6 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.support.logging.Log;
-import com.alibaba.druid.support.logging.LogFactory;
 
 @Configuration
 @PropertySources({ @PropertySource("classpath:config.properties"),
@@ -24,7 +23,8 @@ public class DataSourceConfig {
 	@Autowired
 	private Environment env;
 
-	private Log log = LogFactory.getLog(DataSourceConfig.class);
+	private Logger log = Logger.getLogger(DataSourceConfig.class);
+	
 	@Bean(name="dataSource")
 	public DataSource dataSource() throws SQLException {
 		DruidDataSource dataSource = new DruidDataSource();

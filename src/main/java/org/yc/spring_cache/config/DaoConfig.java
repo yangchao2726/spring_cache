@@ -10,8 +10,10 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,9 +23,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.alibaba.druid.support.logging.Log;
-import com.alibaba.druid.support.logging.LogFactory;
-
 /**
  * @Description:启用注解事务管理，使用CGLib代理  
  * 关于getResourcePatternResolver()的调用  在加载成功后spring会做拦截，而不是再次调用该方法加载bean
@@ -32,13 +31,13 @@ import com.alibaba.druid.support.logging.LogFactory;
  */
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
-@Import(value={DataSourceConfig.class})
+@Import(DataSourceConfig.class)
 public class DaoConfig {
 	
-	@javax.annotation.Resource(name="dataSource")
+	@Autowired
 	private DataSource dataSource;
 
-	private Log log = LogFactory.getLog(AppConfig.class);
+	private Logger log = Logger.getLogger(AppConfig.class);
 	
 	/**
 	 * @return

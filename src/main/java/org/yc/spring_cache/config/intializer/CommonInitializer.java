@@ -3,7 +3,7 @@
  * @author:YC
  * @time:2016年12月29日 下午4:58:35
  */
-package org.yc.spring_cache.config;
+package org.yc.spring_cache.config.intializer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

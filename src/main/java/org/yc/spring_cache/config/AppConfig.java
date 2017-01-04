@@ -9,11 +9,12 @@ import org.springframework.stereotype.Controller;
 
 /**
  * @author YC
- * @see http://hanqunfeng.iteye.com/blog/2114975 受益匪浅 打个广告
- * 激活自动代理功能
+ * @see http://hanqunfeng.iteye.com/blog/2114975 受益匪浅 打个广告 激活自动代理功能
  */
 @Configuration
-@ComponentScan(basePackages = "org.yc.spring_cache", excludeFilters = { @ComponentScan.Filter(type = FilterType.ANNOTATION, value = { Controller.class }) })
-@EnableAspectJAutoProxy(proxyTargetClass=true)
-@Import(value = {DaoConfig.class,CachingConfig.class})
-public class AppConfig {}
+@ComponentScan(basePackages = "org.yc.spring_cache", excludeFilters = {
+		@ComponentScan.Filter(type = FilterType.ANNOTATION, value = { Controller.class }) })
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+@Import(value = { DataSourceConfig.class, DaoConfig.class, CachingConfig.class })
+public class AppConfig {
+}

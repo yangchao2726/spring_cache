@@ -13,7 +13,6 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -34,7 +33,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Import(DataSourceConfig.class)
 public class DaoConfig {
 	
-	@Autowired
+	@javax.annotation.Resource
 	private DataSource dataSource;
 
 	private Logger log = Logger.getLogger(AppConfig.class);
@@ -57,7 +56,7 @@ public class DaoConfig {
 	 * @author: YC
 	 * @time:2016年12月28日 下午1:32:35
 	 */
-	@Bean
+	@Bean("resourcePatternResolver")
 	public ResourcePatternResolver getResourcePatternResolver() {
 		return new PathMatchingResourcePatternResolver();
 	}
@@ -83,7 +82,7 @@ public class DaoConfig {
 		return sqlSessionFactoryBean;
 	}
 	
-    @Bean
+    @Bean("mapperScannerConfigurer")
 	public MapperScannerConfigurer getMapperScannerConfigurer() throws SQLException {
 		MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
 		mapperScannerConfigurer.setBasePackage("org.yc.spring_cache.dao");
